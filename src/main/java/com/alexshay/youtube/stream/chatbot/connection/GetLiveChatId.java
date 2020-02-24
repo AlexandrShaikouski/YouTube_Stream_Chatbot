@@ -39,7 +39,7 @@ public class GetLiveChatId {
      * @param videoId The videoId associated with the live broadcast.
      * @return A liveChatId, or null if not found.
      */
-    static String getLiveChatId(YouTube youtube, String videoId) throws IOException {
+    public static String getLiveChatId(YouTube youtube, String videoId) throws IOException {
         // Get liveChatId from the video
         String liveChatId = null;
         YouTube.Videos.List videoList = youtube.videos()

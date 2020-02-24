@@ -47,19 +47,12 @@ public class InsertLiveChatMessage {
     /**
      * Inserts a message into a live broadcast.
      *
-     * @param args The message to insert (required) followed by the videoId (optional).
+     * @param VideoId The message to insert (required) followed by the videoId (optional).
      * If the videoId is given, live chat messages will be retrieved from the chat associated with
      * this video. If the videoId is not specified, the signed in user's current live broadcast will
      * be used instead.
      */
-    public static void main(String[] args) {
-        // Get the chat message to insert
-        if (args.length == 0) {
-            System.err.println("No message specified");
-            System.exit(1);
-        }
-        String message = args[0];
-
+    public static void action(String VideoId) {
         // This OAuth 2.0 access scope allows for write access to the authenticated user's account.
         List<String> scopes = Lists.newArrayList(YouTubeScopes.YOUTUBE_FORCE_SSL);
 
@@ -72,9 +65,7 @@ public class InsertLiveChatMessage {
                     .setApplicationName("youtube-cmdline-insertchatmessage-sample").build();
 
             // Get the liveChatId
-            String liveChatId = args.length == 2
-                    ? GetLiveChatId.getLiveChatId(youtube, args[1])
-                    : GetLiveChatId.getLiveChatId(youtube);
+            String liveChatId = GetLiveChatId.getLiveChatId(youtube, VideoId);
             if (liveChatId != null) {
                 System.out.println("Live chat id: " + liveChatId);
             } else {
@@ -88,7 +79,7 @@ public class InsertLiveChatMessage {
             snippet.setType("textMessageEvent");
             snippet.setLiveChatId(liveChatId);
             LiveChatTextMessageDetails details = new LiveChatTextMessageDetails();
-            details.setMessageText(message);
+            details.setMessageText(VideoId);
             snippet.setTextMessageDetails(details);
             liveChatMessage.setSnippet(snippet);
             YouTube.LiveChatMessages.Insert liveChatInsert =

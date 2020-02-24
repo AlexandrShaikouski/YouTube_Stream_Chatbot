@@ -50,44 +50,8 @@ public class ListLiveChatMessages {
      * from the chat associated with this video. If the videoId is not specified, the signed in
      * user's current live broadcast will be used instead.
      */
-    public static void action(String videoId) {
-
-        // This OAuth 2.0 access scope allows for read-only access to the
-        // authenticated user's account, but not other types of account access.
-        List<String> scopes = Lists.newArrayList(YouTubeScopes.YOUTUBE_READONLY);
-
-        try {
-            // Authorize the request.
-            Credential credential = Auth.authorize(scopes, "listlivechatmessages");
-
-            // This object is used to make YouTube Data API requests.
-            youtube = new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
-                    .setApplicationName("youtube-cmdline-listchatmessages-sample").build();
-
-            // Get the liveChatId
-            String liveChatId = GetLiveChatId.getLiveChatId(youtube, videoId);
-            if (liveChatId != null) {
-                System.out.println("Live chat id: " + liveChatId);
-            } else {
-                System.err.println("Unable to find a live chat id");
-                System.exit(1);
-            }
-
-            // Get live chat messages
-            listChatMessages(liveChatId, null, 0);
-        } catch (GoogleJsonResponseException e) {
-            System.err
-                    .println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
-                            + e.getDetails().getMessage());
-            e.printStackTrace();
-
-        } catch (IOException e) {
-            System.err.println("IOException: " + e.getMessage());
-            e.printStackTrace();
-        } catch (Throwable t) {
-            System.err.println("Throwable: " + t.getMessage());
-            t.printStackTrace();
-        }
+    public static void action(String liveChatId) {
+        listChatMessages(liveChatId, null, 0);
     }
 
     /**

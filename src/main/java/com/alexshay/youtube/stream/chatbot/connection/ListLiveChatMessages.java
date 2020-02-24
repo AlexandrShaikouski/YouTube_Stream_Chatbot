@@ -122,7 +122,10 @@ public class ListLiveChatMessages {
                             List<LiveChatMessage> messages = response.getItems();
                             for (LiveChatMessage message : messages) {
                                 LiveChatMessageSnippet snippet = message.getSnippet();
-
+                                System.out.println(buildOutput(
+                                        snippet.getDisplayMessage(),
+                                        message.getAuthorDetails(),
+                                        snippet.getSuperChatDetails()));
                                 ///////////////////////
                                 ///////////////////////
                             }

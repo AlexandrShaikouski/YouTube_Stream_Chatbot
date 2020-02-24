@@ -60,12 +60,12 @@ public class Auth {
             System.exit(1);
         }
 
-        // This creates the credentials datastore at ~/.oauth-credentials/${credentialDatastore}
+        // This creates the credentials dataStore at ~/.oauth-credentials/${credentialDataStore}
         FileDataStoreFactory fileDataStoreFactory = new FileDataStoreFactory(new File(System.getProperty("user.home") + "/" + CREDENTIALS_DIRECTORY));
-        DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore(credentialDatastore);
+        DataStore<StoredCredential> dataStore = fileDataStoreFactory.getDataStore(credentialDatastore);
 
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes).setCredentialDataStore(datastore)
+                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes).setCredentialDataStore(dataStore)
                 .build();
 
         // Build the local server and bind it to port 8080

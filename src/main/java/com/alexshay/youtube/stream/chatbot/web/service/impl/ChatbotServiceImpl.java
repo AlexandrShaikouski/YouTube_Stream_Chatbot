@@ -8,6 +8,7 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeScopes;
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,6 +16,9 @@ import java.util.List;
 
 @Service
 public class ChatbotServiceImpl implements ChatbotService {
+    @Autowired
+    private ListLiveChatMessages listLiveChatMessages;
+
     @Override
     public boolean isChatbotGo(String videoId) throws IOException {
         boolean isChatbotGo = false;
@@ -29,7 +33,7 @@ public class ChatbotServiceImpl implements ChatbotService {
         String liveChatId = GetLiveChatId.getLiveChatId(youtube, videoId);
 
         if (liveChatId != null && !liveChatId.isEmpty()) {
-            ListLiveChatMessages.action(liveChatId);
+            listLiveChatMessages.action(liveChatId);
             isChatbotGo = true;
         }
 

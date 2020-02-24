@@ -30,26 +30,14 @@ import java.util.List;
 public class DeleteLiveChatMessage {
 
     /**
-     * Define a global instance of a Youtube object, which will be used
-     * to make YouTube Data API requests.
-     */
-    private static YouTube youtube;
-
-    /**
      * Deletes a message from a live broadcast.
      *
-     * @param args The message id to delete (required) followed by the videoId (optional). If the
+     * @param messageId The message id to delete (required) followed by the videoId (optional). If the
      * videoId is given, live chat messages will be retrieved from the chat associated with this
      * video. If the videoId is not specified, the signed in user's current live broadcast will be
      * used instead.
      */
-    public static void main(String[] args) {
-        // Get the message id to delete
-        if (args.length == 0) {
-            System.err.println("No message id specified");
-            System.exit(1);
-        }
-        String messageId = args[0];
+    public static void action(String messageId) {
 
         // This OAuth 2.0 access scope allows for write access to the authenticated user's account.
         List<String> scopes = Lists.newArrayList(YouTubeScopes.YOUTUBE_FORCE_SSL);
@@ -59,7 +47,11 @@ public class DeleteLiveChatMessage {
             Credential credential = Auth.authorize(scopes, "deletelivechatmessage");
 
             // This object is used to make YouTube Data API requests.
-            youtube = new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
+            /**
+             * Define a global instance of a Youtube object, which will be used
+             * to make YouTube Data API requests.
+             */
+            YouTube youtube = new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
                     .setApplicationName("youtube-cmdline-deletechatmessages-sample").build();
 
             // Delete the message from live chat

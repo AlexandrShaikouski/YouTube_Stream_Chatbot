@@ -1,5 +1,6 @@
 package com.alexshay.youtube.stream.chatbot.connection;
 
+import com.alexshay.youtube.stream.chatbot.web.service.CheckMessage;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.youtube.YouTube;
@@ -10,6 +11,9 @@ import com.google.api.services.youtube.model.LiveChatMessageListResponse;
 import com.google.api.services.youtube.model.LiveChatMessageSnippet;
 import com.google.api.services.youtube.model.LiveChatSuperChatDetails;
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +31,14 @@ import java.util.TimerTask;
  *
  * @author Jim Rogers
  */
+@Service
 public class ListLiveChatMessages {
+    private CheckMessage checkMessage;
+
+    @Autowired
+    public ListLiveChatMessages(CheckMessage checkMessage) {
+        this.checkMessage = checkMessage;
+    }
 
     /**
      * Common fields to retrieve for chat messages
@@ -46,11 +57,11 @@ public class ListLiveChatMessages {
     /**
      * Lists live chat messages and SuperChat details from a live broadcast.
      *
-     * @param videoId videoId (optional). If the videoId is given, live chat messages will be retrieved
+     * @param liveChatId videoId (optional). If the videoId is given, live chat messages will be retrieved
      * from the chat associated with this video. If the videoId is not specified, the signed in
      * user's current live broadcast will be used instead.
      */
-    public static void action(String liveChatId) {
+    public void action(String liveChatId) {
         listChatMessages(liveChatId, null, 0);
     }
 
@@ -62,12 +73,10 @@ public class ListLiveChatMessages {
      * @param nextPageToken The page token from the previous request, if any.
      * @param delayMs The delay in milliseconds before making the request.
      */
-    private static void listChatMessages(
+    private void listChatMessages(
             final String liveChatId,
             final String nextPageToken,
             long delayMs) {
-        System.out.println(
-                String.format("Getting chat messages in %1$.3f seconds...", delayMs * 0.001));
         Timer pollTimer = new Timer();
         pollTimer.schedule(
                 new TimerTask() {
@@ -92,6 +101,7 @@ public class ListLiveChatMessages {
                                         snippet.getSuperChatDetails()));
                                 ///////////////////////
                                 ///////////////////////
+                                checkMessage.checkMessage(message);
                             }
 
                             // Request the next page of messages

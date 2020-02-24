@@ -47,12 +47,12 @@ public class InsertLiveChatMessage {
     /**
      * Inserts a message into a live broadcast.
      *
-     * @param VideoId The message to insert (required) followed by the videoId (optional).
+     * @param videoId The message to insert (required) followed by the videoId (optional).
      * If the videoId is given, live chat messages will be retrieved from the chat associated with
      * this video. If the videoId is not specified, the signed in user's current live broadcast will
      * be used instead.
      */
-    public static void action(String VideoId) {
+    public static void action(String videoId, String displayMessage) {
         // This OAuth 2.0 access scope allows for write access to the authenticated user's account.
         List<String> scopes = Lists.newArrayList(YouTubeScopes.YOUTUBE_FORCE_SSL);
 
@@ -65,7 +65,7 @@ public class InsertLiveChatMessage {
                     .setApplicationName("youtube-cmdline-insertchatmessage-sample").build();
 
             // Get the liveChatId
-            String liveChatId = GetLiveChatId.getLiveChatId(youtube, VideoId);
+            String liveChatId = GetLiveChatId.getLiveChatId(youtube, videoId);
             if (liveChatId != null) {
                 System.out.println("Live chat id: " + liveChatId);
             } else {
@@ -79,7 +79,7 @@ public class InsertLiveChatMessage {
             snippet.setType("textMessageEvent");
             snippet.setLiveChatId(liveChatId);
             LiveChatTextMessageDetails details = new LiveChatTextMessageDetails();
-            details.setMessageText(VideoId);
+            details.setMessageText(displayMessage);
             snippet.setTextMessageDetails(details);
             liveChatMessage.setSnippet(snippet);
             YouTube.LiveChatMessages.Insert liveChatInsert =
